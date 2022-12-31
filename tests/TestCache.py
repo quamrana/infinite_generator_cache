@@ -45,8 +45,28 @@ class TestSingleGeneratorCached(TestCase):
         self.whenSecondDecorationMade()
         self.thenWrappedGeneratorsAreEqual()
 
+    def test_when_called_the_generator_has_correct_name(self):
+        self.whenFirstDecorationMade()
+        self.thenFirstAsStringIncludesAll(['infinite_generator_cache object', 'containing <class',
+                                           '_create_new_mock_generator_class.<locals>.MockGenerator'])
+        self.whenFirstGeneratorIsCreated()
+        self.thenFirstGeneratorAsStringIs('<generator object TestSingleGeneratorCached._create_new_mock_generator_class.<locals>.MockGenerator')
+
     def thenTwoDecoratorsAreNotEqual(self):
         self.shouldNotEqual(self.first, self.second)
 
     def thenWrappedGeneratorsAreEqual(self):
         self.shouldEqual(self.first.wrapped, self.second.wrapped)
+
+    def whenFirstGeneratorIsCreated(self):
+        self.first_generator = self.first()
+
+    def thenFirstAsStringIncludesAll(self, expected):
+        str_repr = str(self.first)
+        result = all(item in str_repr for item in expected)
+        self.shouldBeTrue(result, f'Every item in {expected} should be in {str_repr}')
+
+    def thenFirstGeneratorAsStringIs(self, expected):
+        str_repr = str(self.first_generator)
+        result = str_repr.startswith(expected)
+        self.shouldBeTrue(result, f'{expected} should be in {str_repr}')
