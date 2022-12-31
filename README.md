@@ -38,3 +38,11 @@ def gen():
         yield c
 ```
 You can still have multiple clients for this generator and a time cost has to be paid for each new number generated, but only the first one that retrieves a new number pays the time cost. All other clients which retrieve old numbers get it directly from the cache.
+
+## Limitations
+
+This decorator is limited to infinite generators.
+
+This decorator is limited to generators which take no parameters.
+
+This decorator provides no performance improvement if the generator is not reused.
